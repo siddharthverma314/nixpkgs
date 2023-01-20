@@ -6,6 +6,7 @@
 , libiconv
 , fetchzip
 , typing-extensions
+, darwin
 }:
 let
   pname = "polars";
@@ -46,7 +47,7 @@ buildPythonPackage {
 
   nativeBuildInputs = with rustPlatform; [ cargoSetupHook maturinBuildHook ];
 
-  buildInputs = lib.optionals stdenv.isDarwin [ libiconv ];
+  buildInputs = lib.optionals stdenv.isDarwin [ libiconv darwin.apple_sdk.frameworks.Security ];
 
   pythonImportsCheck = [ "polars" ];
   # checkInputs = [
@@ -60,7 +61,7 @@ buildPythonPackage {
   # ];
 
   meta = with lib; {
-    broken = (stdenv.isLinux && stdenv.isAarch64) || stdenv.isDarwin;
+    broken = stdenv.isLinux && stdenv.isAarch64;
     description = "Fast multi-threaded DataFrame library in Rust | Python | Node.js ";
     homepage = "https://github.com/pola-rs/polars";
     license = licenses.asl20;
